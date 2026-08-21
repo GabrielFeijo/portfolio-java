@@ -61,7 +61,7 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint))
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints Públicos de Raiz e Health
-                        .requestMatchers(HttpMethod.GET, "/", "/v2", "/v2/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/", "/v2", "/v2/", "/health", "/v2/health").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
 
                         // Swagger / OpenAPI UI
