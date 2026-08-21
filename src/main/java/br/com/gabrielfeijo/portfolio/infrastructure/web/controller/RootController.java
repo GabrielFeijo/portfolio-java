@@ -2,6 +2,9 @@ package br.com.gabrielfeijo.portfolio.infrastructure.web.controller;
 
 import br.com.gabrielfeijo.portfolio.application.dto.response.HealthResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +42,56 @@ public class RootController {
             summary = "Health check detalhado e status do ecossistema",
             description = "Retorna o status operacional da API, integridade e latência do MongoDB, telemetria da JVM e uptime.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Ecossistema operacional"),
-                    @ApiResponse(responseCode = "503", description = "Serviço ou banco de dados indisponível")
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Ecossistema operacional",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = HealthResponse.class),
+                                    examples = @ExampleObject(
+                                            name = "Exemplo de Health Check UP",
+                                            value = """
+                                                    {
+                                                      "status": "UP",
+                                                      "timestamp": "2026-08-21T23:57:31.500Z",
+                                                      "uptime": "00m 21s",
+                                                      "application": {
+                                                        "name": "api-portfolio-java",
+                                                        "version": "2.0.0",
+                                                        "environment": "dev",
+                                                        "author": "Gabriel Feijó",
+                                                        "documentation": "/swagger"
+                                                      },
+                                                      "components": {
+                                                        "database": {
+                                                          "type": "MongoDB",
+                                                          "status": "UP",
+                                                          "latencyMs": 17,
+                                                          "databaseName": "api-portfolio-v2"
+                                                        }
+                                                      },
+                                                      "system": {
+                                                        "javaVersion": "21.0.11",
+                                                        "virtualThreads": true,
+                                                        "availableProcessors": 12,
+                                                        "usedMemoryMb": 73,
+                                                        "freeMemoryMb": 23,
+                                                        "totalMemoryMb": 96,
+                                                        "maxMemoryMb": 7868
+                                                      }
+                                                    }
+                                                    """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "503",
+                            description = "Serviço ou banco de dados indisponível (DEGRADED)",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = HealthResponse.class)
+                            )
+                    )
             }
     )
     public ResponseEntity<HealthResponse> getHealth() {
