@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7-jammy
+    container_name: portfolio-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: portfolio-api-java
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      PORT: 3333
+      SPRING_PROFILES_ACTIVE: prod
+      MONGO_URL: mongodb://mongodb:27017/api-portfolio-v2
+      ADMIN_API_KEY: your_secure_admin_api_key_here
+      SWAGGER_USER: admin
+      SWAGGER_PASSWORD: admin_password_here
+      SWAGGER_ENABLED: "true"
+      ORIGINS: "http://localhost:3000,http://localhost:5173,https://gabrielfeijo.com.br"
+    ports:
+      - "3333:3333"
+
+volumes:
+  mongo_data:
