@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_URL:mongodb://localhost:27017/api-portfolio-v2}
+      auto-index-creation: true
+
+logging:
+  level:
+    root: INFO
+    br.com.gabrielfeijo.portfolio: DEBUG
+    org.springframework.web: INFO
+    org.springframework.data.mongodb: INFO
+    org.springframework.security: INFO

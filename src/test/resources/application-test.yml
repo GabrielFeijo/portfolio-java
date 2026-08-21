@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/portfolio_test_db
+      auto-index-creation: false
+
+portfolio:
+  security:
+    admin-api-key: test-admin-secret-key-123
+    swagger-user: testadmin
+    swagger-password: testpassword
+    swagger-enabled: true

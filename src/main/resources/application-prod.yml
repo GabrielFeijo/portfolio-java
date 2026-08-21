@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_URL}
+      auto-index-creation: false
+
+logging:
+  level:
+    root: WARN
+    br.com.gabrielfeijo.portfolio: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
