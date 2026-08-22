@@ -24,6 +24,9 @@ portfolio:
     swagger-user: ${SWAGGER_USER:admin}
     swagger-password: ${SWAGGER_PASSWORD:admin_password_here}
     swagger-enabled: ${SWAGGER_ENABLED:true}
+  discord:
+    webhook-url: ${DISCORD_WEBHOOK_URL:}
+    enabled: ${DISCORD_WEBHOOK_ENABLED:false}
 
 # Configurações do Springdoc OpenAPI / Swagger UI
 springdoc:

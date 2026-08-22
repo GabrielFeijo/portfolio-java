@@ -3,6 +3,7 @@ package br.com.gabrielfeijo.portfolio.application.service;
 import br.com.gabrielfeijo.portfolio.application.dto.request.CreateContactRequest;
 import br.com.gabrielfeijo.portfolio.application.dto.response.ContactResponse;
 import br.com.gabrielfeijo.portfolio.application.mapper.ContactMapper;
+import br.com.gabrielfeijo.portfolio.domain.event.ContactCreatedEvent;
 import br.com.gabrielfeijo.portfolio.domain.model.Contact;
 import br.com.gabrielfeijo.portfolio.domain.repository.ContactRepositoryPort;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.Instant;
 
@@ -27,6 +29,9 @@ class ContactServiceTest {
     @Mock
     private ContactRepositoryPort contactRepositoryPort;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
     @Spy
     private ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
 
@@ -34,7 +39,7 @@ class ContactServiceTest {
     private ContactService contactService;
 
     @Test
-    @DisplayName("Deve registrar mensagem de contato com sucesso e sanitizar email")
+    @DisplayName("Deve registrar mensagem de contato com sucesso, sanitizar email e publicar evento")
     void shouldCreateContactSuccessfully() {
         CreateContactRequest request = new CreateContactRequest(
                 "  Gabriel Feijó  ",
@@ -59,5 +64,6 @@ class ContactServiceTest {
         assertThat(response.name()).isEqualTo("Gabriel Feijó");
         assertThat(response.email()).isEqualTo("gabriel@email.com");
         verify(contactRepositoryPort).save(any(Contact.class));
+        verify(eventPublisher).publishEvent(any(ContactCreatedEvent.class));
     }
 }

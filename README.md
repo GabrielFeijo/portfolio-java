@@ -242,6 +242,9 @@ SWAGGER_PASSWORD="admin_password_here"
 SWAGGER_ENABLED=true
 
 ADMIN_API_KEY="your_secure_admin_api_key_here"
+
+DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/your/webhook/url"
+DISCORD_WEBHOOK_ENABLED=true
 ```
 
 | Variável | Padrão | Descrição |
@@ -254,6 +257,8 @@ ADMIN_API_KEY="your_secure_admin_api_key_here"
 | `SWAGGER_PASSWORD` | `admin_password_here` | Senha para login no Swagger via HTTP Basic Auth |
 | `SWAGGER_ENABLED` | `true` | Habilita ou desabilita a interface Swagger UI |
 | `ADMIN_API_KEY` | `your_secure_admin_api_key_here` | Chave secreta de administrador necessária para rotas de mutação |
+| `DISCORD_WEBHOOK_URL` | `""` | URL do Webhook do Discord para notificações em tempo real |
+| `DISCORD_WEBHOOK_ENABLED` | `false` | Habilita ou desabilita o disparo assíncrono de notificações no Discord |
 
 ---
 
