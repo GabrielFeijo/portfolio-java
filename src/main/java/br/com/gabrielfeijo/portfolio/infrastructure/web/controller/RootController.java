@@ -143,7 +143,7 @@ public class RootController {
 
         try {
             long start = System.currentTimeMillis();
-            Document pingResult = mongoTemplate.executeCommand(new Document("ping", 1));
+            mongoTemplate.executeCommand(new Document("ping", 1));
             long latencyMs = System.currentTimeMillis() - start;
 
             components.put("database", Map.of(
