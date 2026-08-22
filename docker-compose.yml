@@ -6,7 +6,7 @@ services:
     container_name: portfolio-mongodb
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT:-27017}:27017"
     volumes:
       - mongo_data:/data/db
     healthcheck:
@@ -24,17 +24,21 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
+    env_file:
+      - .env
     environment:
-      PORT: 3333
-      SPRING_PROFILES_ACTIVE: prod
-      MONGO_URL: mongodb://mongodb:27017/api-portfolio-v2
-      ADMIN_API_KEY: your_secure_admin_api_key_here
-      SWAGGER_USER: admin
-      SWAGGER_PASSWORD: admin_password_here
-      SWAGGER_ENABLED: "true"
-      ORIGINS: "http://localhost:3000,http://localhost:5173,https://gabrielfeijo.com.br"
+      PORT: ${PORT:-3333}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      MONGO_URL: ${MONGO_URL:-mongodb://mongodb:27017/api-portfolio-v2}
+      ADMIN_API_KEY: ${ADMIN_API_KEY:-your_secure_admin_api_key_here}
+      SWAGGER_USER: ${SWAGGER_USER:-admin}
+      SWAGGER_PASSWORD: ${SWAGGER_PASSWORD:-admin_password_here}
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-true}
+      ORIGINS: ${ORIGINS:-http://localhost:3000,http://localhost:3001,http://localhost:5173,https://gabrielfeijo.com.br,https://www.gabrielfeijo.com.br}
+      DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL:-}
+      DISCORD_WEBHOOK_ENABLED: ${DISCORD_WEBHOOK_ENABLED:-false}
     ports:
-      - "3333:3333"
+      - "${PORT:-3333}:${PORT:-3333}"
 
 volumes:
   mongo_data:
