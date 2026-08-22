@@ -1,6 +1,7 @@
 package br.com.gabrielfeijo.portfolio.infrastructure.web.controller;
 
 import br.com.gabrielfeijo.portfolio.application.dto.response.HealthResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@Tag(name = "Root", description = "Endpoints raiz e verificação detalhada de integridade")
+@Tag(name = "Health", description = "Endpoint de verificação de integridade e telemetria do sistema")
 @RequiredArgsConstructor
 public class RootController {
 
@@ -37,7 +38,7 @@ public class RootController {
     @Value("${spring.profiles.active:dev}")
     private String activeProfile;
 
-    @GetMapping(value = {"/", "/v2", "/v2/", "/v2/health", "/health"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/v2", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
             summary = "Health check detalhado e status do ecossistema",
             description = "Retorna o status operacional da API, integridade e latência do MongoDB, telemetria da JVM e uptime.",
@@ -123,6 +124,12 @@ public class RootController {
         );
 
         return ResponseEntity.status(httpStatus).body(healthResponse);
+    }
+
+    @Hidden
+    @GetMapping(value = {"/", "/health", "/v2/health"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HealthResponse> getHealthAliases() {
+        return getHealth();
     }
 
     private boolean checkMongoHealth(Map<String, Object> components) {

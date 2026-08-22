@@ -65,7 +65,7 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
 
                         // Swagger / OpenAPI UI
-                        .requestMatchers("/swagger/**", "/swagger-ui/**", "/swagger-ui.html", "/v2/api-docs/**").permitAll()
+                        .requestMatchers("/swagger/**", "/swagger-ui/**", "/swagger-ui.html", "/v2/api-docs/**", "/v2/api-docs", "/v3/api-docs/**", "/v3/api-docs").permitAll()
 
                         // Endpoints Públicos de Comandos (Consulta)
                         .requestMatchers(HttpMethod.GET, "/v2/command", "/v2/command/**").permitAll()
