@@ -1,4 +1,4 @@
-# 🚀 Api-Portfolio-Java - Backend REST Enterprise para Portfólio Interativo
+# 🚀 Api-Portfolio-Java - Backend Spring Boot com MongoDB
 
 > Backend Spring Boot com MongoDB para gerenciamento e fornecimento de dados para o portfólio interativo no estilo VS Code, incluindo comandos de terminal virtual, sistema de avaliações (reviews), formulário de contato, rate limiting granular com Bucket4j, arquitetura limpa (Hexagonal) e autenticação administrativa por API Key.
 
