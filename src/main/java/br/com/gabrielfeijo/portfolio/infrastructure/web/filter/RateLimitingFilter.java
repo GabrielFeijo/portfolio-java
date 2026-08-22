@@ -4,7 +4,6 @@ import br.com.gabrielfeijo.portfolio.application.dto.response.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -80,25 +79,33 @@ public class RateLimitingFilter extends OncePerRequestFilter {
 
     private Bucket createNewBucket(String path, String method) {
         if (path.startsWith("/v2/contact") && "POST".equalsIgnoreCase(method)) {
-            Refill refill = Refill.intervally(2, Duration.ofSeconds(10));
-            Bandwidth limit = Bandwidth.classic(2, refill);
+            Bandwidth limit = Bandwidth.builder()
+                    .capacity(2)
+                    .refillIntervally(2, Duration.ofSeconds(10))
+                    .build();
             return Bucket.builder().addLimit(limit).build();
         }
 
         if (path.startsWith("/v2/review") && "POST".equalsIgnoreCase(method)) {
-            Refill refill = Refill.intervally(3, Duration.ofSeconds(1));
-            Bandwidth limit = Bandwidth.classic(3, refill);
+            Bandwidth limit = Bandwidth.builder()
+                    .capacity(3)
+                    .refillIntervally(3, Duration.ofSeconds(1))
+                    .build();
             return Bucket.builder().addLimit(limit).build();
         }
 
         if (path.startsWith("/v2/command") && ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) || "DELETE".equalsIgnoreCase(method))) {
-            Refill refill = Refill.intervally(5, Duration.ofSeconds(1));
-            Bandwidth limit = Bandwidth.classic(5, refill);
+            Bandwidth limit = Bandwidth.builder()
+                    .capacity(5)
+                    .refillIntervally(5, Duration.ofSeconds(1))
+                    .build();
             return Bucket.builder().addLimit(limit).build();
         }
 
-        Refill refill = Refill.intervally(100, Duration.ofMinutes(1));
-        Bandwidth limit = Bandwidth.classic(100, refill);
+        Bandwidth limit = Bandwidth.builder()
+                .capacity(100)
+                .refillIntervally(100, Duration.ofMinutes(1))
+                .build();
         return Bucket.builder().addLimit(limit).build();
     }
 
