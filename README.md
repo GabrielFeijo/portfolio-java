@@ -35,8 +35,9 @@ Reconstruído em **Java 21 LTS** e **Spring Boot 3.3+**, o projeto preserva **10
 | **Comandos** | [http://localhost:3333/v2/command](http://localhost:3333/v2/command) | Catálogo de comandos para o terminal interativo |
 | **Reviews** | [http://localhost:3333/v2/review](http://localhost:3333/v2/review) | Listagem e criação de depoimentos |
 | **Contato** | [http://localhost:3333/v2/contact](http://localhost:3333/v2/contact) | Registro de mensagens de visitantes |
-| **Health Check** | [http://localhost:3333/actuator/health](http://localhost:3333/actuator/health) | Verificação de integridade e conectividade com MongoDB |
+| **Health Check** | [http://localhost:3333/v2](http://localhost:3333/v2) | Status da API, latência do MongoDB e telemetria JVM |
 | **Prometheus** | [http://localhost:3333/actuator/prometheus](http://localhost:3333/actuator/prometheus) | Métricas técnicas e telemetria da aplicação |
+| **Insomnia** | [`Insomnia_Portfolio_Java_v2.json`](./Insomnia_Portfolio_Java_v2.json) | Collection completa pronta para importação no Insomnia |
 
 ---
 

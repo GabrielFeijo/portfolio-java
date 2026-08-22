@@ -1,0 +1,497 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-08-22T00:03:00.000Z",
+  "__export_source": "insomnia.desktop.app:v9.3.3",
+  "resources": [
+    {
+      "_id": "wrk_portfolio_java_v2",
+      "parentId": null,
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "name": "Api-Portfolio-Java (v2)",
+      "description": "Collection completa para o backend enterprise em Java 21 LTS + Spring Boot 3.3 com MongoDB, Clean Architecture, Spring Security com API Key, Rate Limiting Bucket4j e OpenAPI 3.",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_portfolio_base",
+      "parentId": "wrk_portfolio_java_v2",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3333",
+        "api_key": "your_secure_admin_api_key_here",
+        "swagger_user": "admin",
+        "swagger_pass": "admin_password_here"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "api_key",
+          "swagger_user",
+          "swagger_pass"
+        ]
+      },
+      "color": "#7d69cb",
+      "isPrivate": false,
+      "metaSortKey": 1724285000000,
+      "_type": "environment"
+    },
+    {
+      "_id": "fld_health",
+      "parentId": "wrk_portfolio_java_v2",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "name": "01 - Health & Status",
+      "description": "Endpoints de integridade, telemetria da JVM e status do MongoDB",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 100,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_health_check",
+      "parentId": "fld_health",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2",
+      "name": "GET Health Check & Telemetry",
+      "description": "Retorna o status geral da aplicação ('UP'), latência de ping do MongoDB em ms, métricas de memória da JVM Java 21, Virtual Threads e tempo de atividade contínua (uptime).",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 10,
+      "_type": "request"
+    },
+    {
+      "_id": "req_actuator_health",
+      "parentId": "fld_health",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/actuator/health",
+      "name": "GET Actuator Health",
+      "description": "Endpoint padrão do Spring Boot Actuator para verificação de integridade do container e serviços.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 20,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_commands",
+      "parentId": "wrk_portfolio_java_v2",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "name": "02 - Commands (Terminal Virtual)",
+      "description": "Catálogo de comandos executáveis no terminal interativo do portfólio",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 200,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_list_commands",
+      "parentId": "fld_commands",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/command",
+      "name": "GET List Commands (Public)",
+      "description": "Lista os comandos cadastrados com suporte a busca textual por nome, aliases, categoria ou descrição.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "search",
+          "value": "",
+          "description": "Filtro textual opcional",
+          "disabled": true
+        },
+        {
+          "name": "page",
+          "value": "1",
+          "description": "Número da página",
+          "disabled": true
+        },
+        {
+          "name": "limit",
+          "value": "20",
+          "description": "Quantidade máxima de registros",
+          "disabled": true
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 10,
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_command_by_name",
+      "parentId": "fld_commands",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/command/skills",
+      "name": "GET Command by Name / Alias (Public)",
+      "description": "Busca comando por nome exato ou por um de seus aliases com normalização NFD e sanitização automática.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 20,
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_command",
+      "parentId": "fld_commands",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/command",
+      "name": "POST Create Command (Admin)",
+      "description": "Cadastra um novo comando no terminal interativo. Exige cabeçalho 'x-api-key'.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"command\": \"skills\",\n  \"aliases\": [\"habilidades\", \"stack\", \"techs\"],\n  \"category\": \"portfolio\",\n  \"description\": \"Lista as principais tecnologias e habilidades do desenvolvedor\",\n  \"language\": \"pt\",\n  \"response\": [\n    \"☕ Java 21 & Spring Boot 3.3 (Clean Architecture, Virtual Threads)\",\n    \"🍃 Spring Data MongoDB & PostgreSQL\",\n    \"🔒 Spring Security 6 & API Key Auth\",\n    \"⚡ Bucket4j Rate Limiting & OpenAPI 3 (Swagger)\",\n    \"🐳 Docker & Docker Compose\"\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-api-key",
+          "value": "{{ _.api_key }}",
+          "description": "Chave administrativa obrigatória"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 30,
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_command",
+      "parentId": "fld_commands",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/command/6a88e4dfd7a2b0617a6db3fa",
+      "name": "PUT Update Command (Admin)",
+      "description": "Atualiza campos de um comando cadastrado pelo ID.",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Lista atualizada de tecnologias do Gabriel Feijó\",\n  \"aliases\": [\"habilidades\", \"stack\", \"techs\", \"ferramentas\"]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-api-key",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 40,
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_command",
+      "parentId": "fld_commands",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/command/6a88e4dfd7a2b0617a6db3fa",
+      "name": "DELETE Command by ID (Admin)",
+      "description": "Remove permanentemente um comando do catálogo.",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "x-api-key",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 50,
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_command_unauthorized",
+      "parentId": "fld_commands",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/command",
+      "name": "POST Create Command (401 Unauthorized Test)",
+      "description": "Teste de segurança: tentativa de criação sem API key (deve retornar 401 Unauthorized).",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"command\": \"unauthorized_test\",\n  \"response\": [\"forbidden\"]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 60,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_reviews",
+      "parentId": "wrk_portfolio_java_v2",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "name": "03 - Reviews & Depoimentos",
+      "description": "Sistema público de depoimentos, avaliações por estrelas e moderação",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 300,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_list_reviews",
+      "parentId": "fld_reviews",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/review",
+      "name": "GET List Reviews (Public)",
+      "description": "Lista avaliações cadastradas em ordem cronológica decrescente.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "search",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "name": "page",
+          "value": "1",
+          "disabled": true
+        },
+        {
+          "name": "limit",
+          "value": "20",
+          "disabled": true
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 10,
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_review_by_id",
+      "parentId": "fld_reviews",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/review/6a88e4dfd7a2b0617a6db3fb",
+      "name": "GET Review by ID (Public)",
+      "description": "Recupera uma avaliação a partir de seu ID no MongoDB.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 20,
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_review",
+      "parentId": "fld_reviews",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/review",
+      "name": "POST Create Public Review",
+      "description": "Permite que qualquer visitante envie uma avaliação com nome, comentário e nota em estrelas (0 a 5).",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"Tech Lead Recruiter\",\n  \"comment\": \"Excelente domínio de Java 21, Spring Boot 3 e Clean Architecture!\",\n  \"stars\": 5\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 30,
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_review_invalid",
+      "parentId": "fld_reviews",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/review",
+      "name": "POST Create Review (400 Validation Error Test)",
+      "description": "Teste de validação: nota de estrelas inválida (> 5). Deve retornar 400 Bad Request.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"J\",\n  \"comment\": \"Curto\",\n  \"stars\": 10\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 40,
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_review",
+      "parentId": "fld_reviews",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/review/6a88e4dfd7a2b0617a6db3fb",
+      "name": "PUT Update / Moderate Review (Admin)",
+      "description": "Moderação administrativa de comentário ou nota de review. Exige 'x-api-key'.",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"comment\": \"Comentário revisado e aprovado pela moderação.\",\n  \"stars\": 5\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-api-key",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 50,
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_review",
+      "parentId": "fld_reviews",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/review/6a88e4dfd7a2b0617a6db3fb",
+      "name": "DELETE Review by ID (Admin)",
+      "description": "Remove permanentemente uma avaliação cadastrada.",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "x-api-key",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 60,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_contact",
+      "parentId": "wrk_portfolio_java_v2",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "name": "04 - Contact (Formulário de Contato)",
+      "description": "Envio e validação de mensagens de visitantes",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 400,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_create_contact",
+      "parentId": "fld_contact",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/contact",
+      "name": "POST Send Contact Message (Public)",
+      "description": "Recebe e valida mensagem enviada pelo formulário de contato do portfólio.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Recrutador Tech\",\n  \"email\": \"recrutador@empresa.com\",\n  \"message\": \"Olá Gabriel, vimos sua API Java com Spring Boot e gostaríamos de agendar uma conversa técnica.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 10,
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_contact_invalid_email",
+      "parentId": "fld_contact",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/contact",
+      "name": "POST Send Contact (400 Invalid Email Test)",
+      "description": "Teste de validação: e-mail fora do formato RFC. Deve retornar 400 Bad Request.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Gabriel\",\n  \"email\": \"email-invalido\",\n  \"message\": \"Mensagem de teste de validação de e-mail.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 20,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_docs",
+      "parentId": "wrk_portfolio_java_v2",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "name": "05 - Swagger & Docs",
+      "description": "Especificação OpenAPI v3 em formato JSON",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 500,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_openapi_spec",
+      "parentId": "fld_docs",
+      "modified": 1724285000000,
+      "created": 1724285000000,
+      "url": "{{ _.base_url }}/v2/api-docs",
+      "name": "GET OpenAPI v3 JSON Spec",
+      "description": "Retorna o documento JSON completo da especificação OpenAPI 3.0 para consumo por ferramentas externas.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 10,
+      "_type": "request"
+    }
+  ]
+}
