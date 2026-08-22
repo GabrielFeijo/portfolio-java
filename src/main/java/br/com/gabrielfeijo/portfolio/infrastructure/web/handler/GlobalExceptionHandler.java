@@ -5,7 +5,8 @@ import br.com.gabrielfeijo.portfolio.domain.exception.BusinessValidationExceptio
 import br.com.gabrielfeijo.portfolio.domain.exception.DuplicateResourceException;
 import br.com.gabrielfeijo.portfolio.domain.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,52 +21,52 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.time.Instant;
 import java.util.List;
 
-@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 Instant.now(),
                 request.getRequestURI(),
                 request.getMethod(),
                 ex.getMessage(),
-                "Not Found");
+                "Not Found"
+        );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateResource(DuplicateResourceException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleDuplicateResource(DuplicateResourceException ex, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 Instant.now(),
                 request.getRequestURI(),
                 request.getMethod(),
                 ex.getMessage(),
-                "Bad Request");
+                "Bad Request"
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(BusinessValidationException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessValidation(BusinessValidationException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleBusinessValidation(BusinessValidationException ex, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 Instant.now(),
                 request.getRequestURI(),
                 request.getMethod(),
                 ex.getMessage(),
-                "Bad Request");
+                "Bad Request"
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
         List<String> errorMessages = ex.getBindingResult()
                 .getAllErrors()
                 .stream()
@@ -80,7 +81,8 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(),
                 request.getMethod(),
                 message,
-                "Bad Request");
+                "Bad Request"
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
@@ -92,7 +94,8 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(),
                 request.getMethod(),
                 "Não autorizado - API Key inválida ou ausente",
-                "Unauthorized");
+                "Unauthorized"
+        );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
@@ -104,33 +107,34 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(),
                 request.getMethod(),
                 "Não autorizado - API Key inválida ou ausente",
-                "Unauthorized");
+                "Unauthorized"
+        );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 Instant.now(),
                 request.getRequestURI(),
                 request.getMethod(),
                 "Cannot " + request.getMethod() + " " + request.getRequestURI(),
-                "Not Found");
+                "Not Found"
+        );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.METHOD_NOT_ALLOWED.value(),
                 Instant.now(),
                 request.getRequestURI(),
                 request.getMethod(),
                 ex.getMessage(),
-                "Method Not Allowed");
+                "Method Not Allowed"
+        );
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
     }
 
@@ -143,7 +147,8 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(),
                 request.getMethod(),
                 "Internal server error",
-                "Internal Server Error");
+                "Internal Server Error"
+        );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }
