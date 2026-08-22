@@ -26,13 +26,13 @@ public class OpenApiConfig {
                         .contact(new Contact()
                                 .name("Gabriel Feijó")
                                 .url("https://gabrielfeijo.com.br")
-                                .email("gabriel@email.com"))
+                                .email("feijo801@gmail.com"))
                         .license(new License().name("Apache 2.0").url("https://spring.io")))
                 .tags(List.of(
                         new Tag().name("Command").description("Endpoints para gerenciamento e execução de comandos do terminal virtual"),
                         new Tag().name("Review").description("Endpoints para envio e gerenciamento de reviews/depoimentos"),
                         new Tag().name("Contact").description("Endpoints para recebimento de mensagens do formulário de contato"),
-                        new Tag().name("Root").description("Endpoints raiz e verificação de integridade")
+                        new Tag().name("Health").description("Endpoints de verificação de integridade e status operacional")
                 ))
                 .components(new Components()
                         .addSecuritySchemes("api-key", new SecurityScheme()
