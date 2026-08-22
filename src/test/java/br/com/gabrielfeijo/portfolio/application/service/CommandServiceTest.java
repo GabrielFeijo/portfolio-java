@@ -2,7 +2,6 @@ package br.com.gabrielfeijo.portfolio.application.service;
 
 import br.com.gabrielfeijo.portfolio.application.dto.request.CreateCommandRequest;
 import br.com.gabrielfeijo.portfolio.application.dto.request.PaginationQueryRequest;
-import br.com.gabrielfeijo.portfolio.application.dto.request.UpdateCommandRequest;
 import br.com.gabrielfeijo.portfolio.application.dto.response.CommandResponse;
 import br.com.gabrielfeijo.portfolio.application.mapper.CommandMapper;
 import br.com.gabrielfeijo.portfolio.domain.exception.BusinessValidationException;
@@ -69,8 +68,7 @@ class CommandServiceTest {
                 "portfolio",
                 "Descrição",
                 "pt",
-                List.of("Java 21")
-        );
+                List.of("Java 21"));
 
         when(commandRepositoryPort.existsByCommand("skills")).thenReturn(false);
         when(commandRepositoryPort.save(any(Command.class))).thenReturn(sampleCommand);
@@ -91,8 +89,7 @@ class CommandServiceTest {
                 "portfolio",
                 "Descrição",
                 "all",
-                List.of("Java 21")
-        );
+                List.of("Java 21"));
 
         when(commandRepositoryPort.existsByCommand("skills")).thenReturn(true);
 

@@ -1,7 +1,6 @@
 package br.com.gabrielfeijo.portfolio.application.service;
 
 import br.com.gabrielfeijo.portfolio.application.dto.request.CreateReviewRequest;
-import br.com.gabrielfeijo.portfolio.application.dto.request.PaginationQueryRequest;
 import br.com.gabrielfeijo.portfolio.application.dto.request.UpdateReviewRequest;
 import br.com.gabrielfeijo.portfolio.application.dto.response.ReviewResponse;
 import br.com.gabrielfeijo.portfolio.application.mapper.ReviewMapper;
@@ -19,7 +18,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,8 +58,7 @@ class ReviewServiceTest {
         CreateReviewRequest request = new CreateReviewRequest(
                 "  John Doe  ",
                 "  Excelente trabalho e organização!  ",
-                5
-        );
+                5);
 
         when(reviewRepositoryPort.save(any(Review.class))).thenReturn(sampleReview);
 
