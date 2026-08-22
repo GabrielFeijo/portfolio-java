@@ -76,7 +76,7 @@ public class DiscordWebhookNotificationAdapter implements NotificationPort {
     }
 
     private DiscordWebhookPayload buildPayload(Contact contact) {
-        int embedColorHex = 0x7127BA; // Cor roxa / portfolio theme
+        int embedColorHex = 0x7127BA;
 
         List<DiscordWebhookPayload.EmbedField> fields = List.of(
                 new DiscordWebhookPayload.EmbedField("👤 Nome", contact.getName(), true),

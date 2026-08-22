@@ -28,7 +28,6 @@ portfolio:
     webhook-url: ${DISCORD_WEBHOOK_URL:}
     enabled: ${DISCORD_WEBHOOK_ENABLED:false}
 
-# Configurações do Springdoc OpenAPI / Swagger UI
 springdoc:
   api-docs:
     path: /v2/api-docs
@@ -40,7 +39,6 @@ springdoc:
     tags-sorter: alpha
     display-request-duration: true
 
-# Configurações do Actuator
 management:
   endpoints:
     web:

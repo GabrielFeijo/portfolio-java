@@ -60,31 +60,18 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint))
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints Públicos de Raiz e Health
                         .requestMatchers(HttpMethod.GET, "/", "/v2", "/v2/", "/health", "/v2/health").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-
-                        // Swagger / OpenAPI UI
                         .requestMatchers("/swagger/**", "/swagger-ui/**", "/swagger-ui.html", "/v2/api-docs/**", "/v2/api-docs", "/v3/api-docs/**", "/v3/api-docs").permitAll()
-
-                        // Endpoints Públicos de Comandos (Consulta)
                         .requestMatchers(HttpMethod.GET, "/v2/command", "/v2/command/**").permitAll()
-
-                        // Endpoints Públicos de Reviews (Consulta e Criação Pública)
                         .requestMatchers(HttpMethod.GET, "/v2/review", "/v2/review/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v2/review").permitAll()
-
-                        // Endpoints Públicos de Contato
                         .requestMatchers(HttpMethod.POST, "/v2/contact").permitAll()
-
-                        // Endpoints Administrativos Protegidos por API Key
                         .requestMatchers(HttpMethod.POST, "/v2/command").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/v2/command/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/v2/command/**").hasRole("ADMIN")
-
                         .requestMatchers(HttpMethod.PUT, "/v2/review/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/v2/review/**").hasRole("ADMIN")
-
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())

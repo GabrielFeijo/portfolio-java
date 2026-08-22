@@ -36,7 +36,6 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
 
-        // Não aplica rate limit em Swagger, Docs ou Actuator
         if (path.startsWith("/swagger") || path.startsWith("/v2/api-docs") || path.startsWith("/actuator")) {
             filterChain.doFilter(request, response);
             return;
@@ -80,28 +79,24 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     }
 
     private Bucket createNewBucket(String path, String method) {
-        // Contact POST: 2 req / 10s
         if (path.startsWith("/v2/contact") && "POST".equalsIgnoreCase(method)) {
             Refill refill = Refill.intervally(2, Duration.ofSeconds(10));
             Bandwidth limit = Bandwidth.classic(2, refill);
             return Bucket.builder().addLimit(limit).build();
         }
 
-        // Review POST: 3 req / 1s
         if (path.startsWith("/v2/review") && "POST".equalsIgnoreCase(method)) {
             Refill refill = Refill.intervally(3, Duration.ofSeconds(1));
             Bandwidth limit = Bandwidth.classic(3, refill);
             return Bucket.builder().addLimit(limit).build();
         }
 
-        // Command POST: 5 req / 1s
         if (path.startsWith("/v2/command") && ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) || "DELETE".equalsIgnoreCase(method))) {
             Refill refill = Refill.intervally(5, Duration.ofSeconds(1));
             Bandwidth limit = Bandwidth.classic(5, refill);
             return Bucket.builder().addLimit(limit).build();
         }
 
-        // Padrão: 100 req / 60s
         Refill refill = Refill.intervally(100, Duration.ofMinutes(1));
         Bandwidth limit = Bandwidth.classic(100, refill);
         return Bucket.builder().addLimit(limit).build();
