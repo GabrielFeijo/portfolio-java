@@ -9,6 +9,9 @@
 [![Maven](https://img.shields.io/badge/Maven-3.9-C71A36?logo=apachemaven)](https://maven.apache.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker)](https://www.docker.com/)
 
+> [!NOTE]
+> **Aviso:** Esta API é um projeto demonstrativo de engenharia de software e **não reflete a API atualmente em produção** conectada ao portfólio oficial.
+
 ---
 
 ## 📋 Sobre o Projeto
