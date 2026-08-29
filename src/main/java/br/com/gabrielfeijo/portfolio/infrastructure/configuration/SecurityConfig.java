@@ -61,7 +61,8 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/", "/v2", "/v2/", "/health", "/v2/health").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .requestMatchers("/swagger/**", "/swagger-ui/**", "/swagger-ui.html", "/v2/api-docs/**", "/v2/api-docs", "/v3/api-docs/**", "/v3/api-docs").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v2/command", "/v2/command/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v2/review", "/v2/review/**").permitAll()

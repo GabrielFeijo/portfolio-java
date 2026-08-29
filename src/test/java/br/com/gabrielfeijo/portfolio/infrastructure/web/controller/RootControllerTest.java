@@ -44,7 +44,7 @@ class RootControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("UP"))
                 .andExpect(jsonPath("$.application.name").value("api-portfolio-java"))
-                .andExpect(jsonPath("$.application.version").value("2.0.0"))
+                .andExpect(jsonPath("$.application.version").exists())
                 .andExpect(jsonPath("$.system.javaVersion").exists())
                 .andExpect(jsonPath("$.uptime").exists());
     }

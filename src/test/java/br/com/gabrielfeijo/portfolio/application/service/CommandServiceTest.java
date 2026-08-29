@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -117,6 +119,14 @@ class CommandServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lançar BusinessValidationException se nome do comando for maior que 100 caracteres")
+    void shouldThrowBusinessValidationExceptionWhenCommandNameTooLong() {
+        String longName = "a".repeat(101);
+        assertThatThrownBy(() -> commandService.getCommandByName(longName))
+                .isInstanceOf(BusinessValidationException.class);
+    }
+
+    @Test
     @DisplayName("Deve lançar ResourceNotFoundException se comando não for encontrado")
     void shouldThrowNotFoundWhenCommandDoesNotExist() {
         when(commandRepositoryPort.findByCommandOrAlias("unknown")).thenReturn(Optional.empty());
@@ -137,6 +147,16 @@ class CommandServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lançar ResourceNotFoundException ao deletar ID inexistente")
+    void shouldThrowNotFoundWhenDeletingNonExistentCommand() {
+        when(commandRepositoryPort.findById("non-existent")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> commandService.deleteCommand("non-existent"))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("non-existent");
+    }
+
+    @Test
     @DisplayName("Deve listar comandos com paginação")
     void shouldListCommands() {
         PaginationQueryRequest query = new PaginationQueryRequest(false, 1, 10, "skill");
@@ -148,4 +168,28 @@ class CommandServiceTest {
         assertThat(responses).hasSize(1);
         assertThat(responses.get(0).command()).isEqualTo("skills");
     }
+
+    @ParameterizedTest(name = "Sanitização: ''{0}'' → ''{1}''")
+    @DisplayName("Deve sanitizar o nome do comando corretamente via createCommand")
+    @CsvSource({
+            " Skills ,         skills",
+            "HELLO WORLD,      hello world",
+            "café,             cafe",
+            "git-log,          git-log",
+            "ls --all,         ls --all",
+            "cmd@#$%,          cmd",
+    })
+    void shouldSanitizeCommandNameViaCreateCommand(String rawInput, String expectedSanitized) {
+        String expected = expectedSanitized.trim();
+        when(commandRepositoryPort.existsByCommand(expected)).thenReturn(false);
+        when(commandRepositoryPort.save(any(Command.class))).thenAnswer(inv -> {
+            Command c = inv.getArgument(0);
+            assertThat(c.getCommand()).isEqualTo(expected);
+            return sampleCommand;
+        });
+
+        commandService.createCommand(new CreateCommandRequest(
+                rawInput.trim(), List.of(), "general", "", "all", List.of()));
+    }
 }
+

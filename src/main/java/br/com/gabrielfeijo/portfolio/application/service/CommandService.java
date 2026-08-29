@@ -34,26 +34,8 @@ public class CommandService {
 
         Command command = commandMapper.toDomain(request);
         command.setCommand(normalizedCommand);
-
-        if (command.getAliases() == null) {
-            command.setAliases(new ArrayList<>());
-        } else {
-            command.setAliases(command.getAliases().stream()
-                    .map(this::sanitizeCommand)
-                    .filter(s -> !s.isBlank())
-                    .distinct()
-                    .toList());
-        }
-
-        if (command.getCategory() == null || command.getCategory().isBlank()) {
-            command.setCategory("general");
-        }
-        if (command.getDescription() == null) {
-            command.setDescription("");
-        }
-        if (command.getLanguage() == null || command.getLanguage().isBlank()) {
-            command.setLanguage("all");
-        }
+        command.setAliases(sanitizeAliases(command.getAliases()));
+        applyDefaults(command);
 
         Command savedCommand = commandRepositoryPort.save(command);
         return commandMapper.toResponse(savedCommand);
@@ -97,11 +79,7 @@ public class CommandService {
         }
 
         if (request.aliases() != null) {
-            existing.setAliases(request.aliases().stream()
-                    .map(this::sanitizeCommand)
-                    .filter(s -> !s.isBlank())
-                    .distinct()
-                    .toList());
+            existing.setAliases(sanitizeAliases(request.aliases()));
         }
 
         if (request.category() != null) {
@@ -129,13 +107,37 @@ public class CommandService {
         commandRepositoryPort.deleteById(id);
     }
 
-    public String sanitizeCommand(String input) {
+    private List<String> sanitizeAliases(List<String> aliases) {
+        if (aliases == null) {
+            return new ArrayList<>();
+        }
+        return aliases.stream()
+                .map(this::sanitizeCommand)
+                .filter(s -> !s.isBlank())
+                .distinct()
+                .toList();
+    }
+
+    private void applyDefaults(Command command) {
+        if (command.getCategory() == null || command.getCategory().isBlank()) {
+            command.setCategory("general");
+        }
+        if (command.getDescription() == null) {
+            command.setDescription("");
+        }
+        if (command.getLanguage() == null || command.getLanguage().isBlank()) {
+            command.setLanguage("all");
+        }
+    }
+
+    private String sanitizeCommand(String input) {
         if (input == null) return "";
         return Normalizer.normalize(input, Normalizer.Form.NFD)
                 .replaceAll("\\p{M}", "")
-                .replaceAll("[^a-zA-Z0-9._\\- ]", "")
+                .replaceAll("[^a-zA-Z0-9._ -]", "")
                 .replaceAll("\\s+", " ")
                 .trim()
                 .toLowerCase();
     }
 }
+

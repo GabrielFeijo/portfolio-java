@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.List;
 
 @Component
@@ -28,7 +30,7 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
 
         String apiKey = extractApiKey(request);
 
-        if (apiKey != null && apiKey.equals(configuredApiKey)) {
+        if (apiKey != null && isValidApiKey(apiKey)) {
             ApiKeyAuthenticationToken authentication = new ApiKeyAuthenticationToken(
                     apiKey,
                     List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
@@ -37,6 +39,12 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isValidApiKey(String providedKey) {
+        byte[] providedBytes = providedKey.getBytes(StandardCharsets.UTF_8);
+        byte[] configuredBytes = configuredApiKey.getBytes(StandardCharsets.UTF_8);
+        return MessageDigest.isEqual(providedBytes, configuredBytes);
     }
 
     private String extractApiKey(HttpServletRequest request) {
