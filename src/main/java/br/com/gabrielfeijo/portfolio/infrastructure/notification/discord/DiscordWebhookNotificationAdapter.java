@@ -4,6 +4,7 @@ import br.com.gabrielfeijo.portfolio.domain.model.Contact;
 import br.com.gabrielfeijo.portfolio.domain.port.NotificationPort;
 import br.com.gabrielfeijo.portfolio.infrastructure.notification.discord.dto.DiscordWebhookPayload;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -23,7 +24,7 @@ public class DiscordWebhookNotificationAdapter implements NotificationPort {
     private final boolean enabled;
     private final String environment;
 
-    @org.springframework.beans.factory.annotation.Autowired
+    @Autowired
     public DiscordWebhookNotificationAdapter(
             @Value("${portfolio.discord.webhook-url:}") String webhookUrl,
             @Value("${portfolio.discord.enabled:false}") boolean enabled,
