@@ -11,7 +11,11 @@ public interface ContactMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "name", expression = "java(request.name().trim())")
+    @Mapping(target = "email", expression = "java(request.email().trim().toLowerCase())")
+    @Mapping(target = "message", expression = "java(request.message().trim())")
     Contact toDomain(CreateContactRequest request);
 
     ContactResponse toResponse(Contact contact);
 }
+

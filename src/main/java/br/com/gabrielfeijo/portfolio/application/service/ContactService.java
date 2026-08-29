@@ -24,9 +24,6 @@ public class ContactService {
     @Transactional
     public ContactResponse createContact(CreateContactRequest request) {
         Contact contact = contactMapper.toDomain(request);
-        contact.setName(request.name().trim());
-        contact.setEmail(request.email().trim().toLowerCase());
-        contact.setMessage(request.message().trim());
 
         Contact saved = contactRepositoryPort.save(contact);
         log.debug("Contact saved with ID: {}. Publishing event for notification.", saved.getId());
@@ -35,3 +32,4 @@ public class ContactService {
         return contactMapper.toResponse(saved);
     }
 }
+
