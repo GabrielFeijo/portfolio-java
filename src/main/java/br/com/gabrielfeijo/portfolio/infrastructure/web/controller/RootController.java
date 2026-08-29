@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +35,9 @@ public class RootController {
 
     @Autowired(required = false)
     private MongoTemplate mongoTemplate;
+
+    @Autowired(required = false)
+    private BuildProperties buildProperties;
 
     @Value("${spring.profiles.active:dev}")
     private String activeProfile;
@@ -101,7 +105,7 @@ public class RootController {
 
         Map<String, Object> appMetadata = new LinkedHashMap<>();
         appMetadata.put("name", "api-portfolio-java");
-        appMetadata.put("version", "2.0.0");
+        appMetadata.put("version", buildProperties != null ? buildProperties.getVersion() : "unknown");
         appMetadata.put("environment", activeProfile);
         appMetadata.put("author", "Gabriel Feijó");
         appMetadata.put("documentation", "/swagger");
